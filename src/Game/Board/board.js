@@ -1,6 +1,9 @@
 import React from 'react';
 import Square from './BoardComponent/Square';
-import calculateWinner from './calculateWinner';
+import winnerCalculator from './calculateWinner';
+import RenderBoard from './BoardCreator'
+
+
 
 class Board extends React.Component {
     constructor(props) {
@@ -9,21 +12,33 @@ class Board extends React.Component {
             squares: Array(9).fill(null),
             Xturn: true,
             turnPlayer: 'X',
+            winCondition: 3,
+            numOfBoardRows: 3,
+            winner: null
+
         }
     }
 
-    handleClick(key) {
-        if (this.isOverwiriting(key) || calculateWinner(this.state.squares)) return;
+
+    handleClick(i) {
+        if (this.isOverwiriting(i) || this.state.winner) return;
+
 
         let squaresCopy = this.state.squares.slice();
         if (this.state.Xturn) {
-            squaresCopy[key] = 'X';
+            squaresCopy[i] = 'X';
             this.setState({ Xturn: false, turnPlayer: 'O' })
         } else {
-            squaresCopy[key] = 'O';
+            squaresCopy[i] = 'O';
             this.setState({ Xturn: true, turnPlayer: 'X' })
         }
         this.setState({ squares: squaresCopy })
+
+        const WinnerCalculator = new winnerCalculator(squaresCopy, this.state.winCondition, this.state.numOfBoardRows);
+        const winner = WinnerCalculator.getWinner();
+        this.setState({
+            winner: winner
+        })
     }
 
     returnCurrPlayer() {
@@ -35,12 +50,12 @@ class Board extends React.Component {
     }
 
 
-    renderSquare(key) {
-        return <Square selectedByUser={this.state.squares[key]} onClick={() => this.handleClick(key)} />;
+    renderSquare(i) {
+        return <Square selectedByUser={this.state.squares[i]} onClick={() => this.handleClick(i)} />;
     }
 
     render() {
-        const winner = calculateWinner(this.state.squares);
+        const winner = this.state.winner;
         let status;
         if (winner) {
             status = 'Winner: ' + winner;
@@ -50,47 +65,16 @@ class Board extends React.Component {
         //https://reactjs.org/docs/jsx-in-depth.html#jsx-children
         //jsx-children document
         return (
+
         <RenderBoard numOfBoardRows={4}>
 
         </RenderBoard>)
         ;
+
     }
 
 }
 
 
-function RowEle(props) {
-    let items = [];
-    for (let i = 0; i < props.numTimes; i++) {
-      items.push(props.children(i));
-    }
-    return <div>{items}</div>;
-  }
-  
-  function RowLayer(props) {
-    let items = [];
-  
-    for (let i = 0; i < props.rows; i++) {
-      items.push(props.children(i));
-    }
-    return <div id="rowsLayer">{items}</div>;
-  }
-  
-  function RenderBoard(pros) {
-    let rows = pros.numOfBoardRows;
-  
-    function calculateSqureId(rowIndex, columnIndex)  {
-      return rowIndex * rows + (columnIndex + 1)
-    }
-  
-    return (
-      <RowLayer rows={rows} >
-        {(rowIndex) => <ul key={rowIndex} id={rowIndex + 1}>
-          <RowEle numTimes={4}>{(columnIndex) =>
-            <li key={columnIndex} id={calculateSqureId(rowIndex,columnIndex)}>This is item {calculateSqureId(rowIndex,columnIndex)} in the list</li>}</RowEle>
-        </ul>}
-      </RowLayer>
-    );
-  }
 
 export default Board;
