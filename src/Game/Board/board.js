@@ -12,62 +12,85 @@ class Board extends React.Component {
         }
     }
 
-    handleClick(i) {
-        if (this.isOverwiriting(i) || calculateWinner(this.state.squares)) return;
+    handleClick(key) {
+        if (this.isOverwiriting(key) || calculateWinner(this.state.squares)) return;
 
         let squaresCopy = this.state.squares.slice();
         if (this.state.Xturn) {
-            squaresCopy[i] = 'X';
+            squaresCopy[key] = 'X';
             this.setState({ Xturn: false, turnPlayer: 'O' })
         } else {
-            squaresCopy[i] = 'O';
+            squaresCopy[key] = 'O';
             this.setState({ Xturn: true, turnPlayer: 'X' })
         }
         this.setState({ squares: squaresCopy })
     }
 
-    returnCurrPlayer(){
-        return this.state.Xturn ? 'X':'O';
+    returnCurrPlayer() {
+        return this.state.Xturn ? 'X' : 'O';
     }
 
-    isOverwiriting(i) {
-        return this.state.squares[i] != null
+    isOverwiriting(key) {
+        return this.state.squares[key] != null
     }
 
 
-    renderSquare(i) {
-        return <Square selectedByUser={this.state.squares[i]} onClick={() => this.handleClick(i)} />;
+    renderSquare(key) {
+        return <Square selectedByUser={this.state.squares[key]} onClick={() => this.handleClick(key)} />;
     }
 
     render() {
         const winner = calculateWinner(this.state.squares);
         let status;
         if (winner) {
-          status = 'Winner: ' + winner;
+            status = 'Winner: ' + winner;
         } else {
-          status = 'Next player: ' + this.state.turnPlayer;
+            status = 'Next player: ' + this.state.turnPlayer;
         }
+        //https://reactjs.org/docs/jsx-in-depth.html#jsx-children
+        //jsx-children document
         return (
-            <div>
-                <div className="status">{status}</div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
-            </div>
-        );
+        <RenderBoard numOfBoardRows={4}>
+
+        </RenderBoard>)
+        ;
     }
+
 }
+
+
+function RowEle(props) {
+    let items = [];
+    for (let i = 0; i < props.numTimes; i++) {
+      items.push(props.children(i));
+    }
+    return <div>{items}</div>;
+  }
+  
+  function RowLayer(props) {
+    let items = [];
+  
+    for (let i = 0; i < props.rows; i++) {
+      items.push(props.children(i));
+    }
+    return <div id="rowsLayer">{items}</div>;
+  }
+  
+  function RenderBoard(pros) {
+    let rows = pros.numOfBoardRows;
+  
+    function calculateSqureId(rowIndex, columnIndex)  {
+      return rowIndex * rows + (columnIndex + 1)
+    }
+  
+    return (
+      <RowLayer rows={rows} >
+        {(rowIndex) => <ul key={rowIndex} id={rowIndex + 1}>
+          <RowEle numTimes={4}>{(columnIndex) =>
+            <li key={columnIndex} id={calculateSqureId(rowIndex,columnIndex)}>This is item {calculateSqureId(rowIndex,columnIndex)} in the list</li>}</RowEle>
+        </ul>}
+      </RowLayer>
+    );
+  }
 
 export default Board;
