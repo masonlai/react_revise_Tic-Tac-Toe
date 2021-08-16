@@ -1,7 +1,6 @@
 import React from 'react';
-import Square from './BoardComponent/Square';
 import winnerCalculator from './calculateWinner';
-import RenderBoard from './BoardCreator'
+import Square from './BoardComponent/Square';
 
 
 
@@ -49,10 +48,13 @@ class Board extends React.Component {
         return this.state.squares[key] != null
     }
 
-
     renderSquare(i) {
         return <Square selectedByUser={this.state.squares[i]} onClick={() => this.handleClick(i)} />;
     }
+
+    calculateSqureId(rowIndex, columnIndex)  {
+        return rowIndex * this.state.numOfBoardRows + (columnIndex)
+      }
 
     render() {
         const winner = this.state.winner;
@@ -65,16 +67,31 @@ class Board extends React.Component {
         //https://reactjs.org/docs/jsx-in-depth.html#jsx-children
         //jsx-children document
         return (
+            <div>
+                <div className="status">{status}</div>
+                {() => {
+                    let rows = [];
+                    for (let i = 0; i < 4; i++) {
+                        rows.push(
+                            <div className="board-row">
+                                {() => {
+                                    for (let i = 0; i < 4; i++) {
+                                        { this.renderSquare(0) }
+                                    }
+                                }}
 
-        <RenderBoard numOfBoardRows={4}>
+                            </div>
+                        );
+                    }
+                    return rows;
+                }
+                }
 
-        </RenderBoard>)
-        ;
+            </div>
+        );
 
     }
 
 }
-
-
 
 export default Board;
