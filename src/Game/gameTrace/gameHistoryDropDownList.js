@@ -10,7 +10,7 @@ class GameHistory extends React.Component {
         
 
         return (
-            <div className="game-info">
+            <div>
                 <div>Moves: #1</div>
                 <DropdownButton id="dropdown-basic-button-sm" title="Game Histroy" size="sm">
                     <Dropdown.Item href="#/action-1">Action</Dropdown.Item>

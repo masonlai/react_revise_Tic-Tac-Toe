@@ -2,8 +2,6 @@ import React from 'react';
 import winnerCalculator from './calculateWinner';
 import Square from './BoardComponent/Square';
 
-
-
 class Board extends React.Component {
     constructor(props) {
         super(props);
@@ -11,13 +9,9 @@ class Board extends React.Component {
             squares: Array(9).fill(null),
             Xturn: true,
             turnPlayer: 'X',
-            winCondition: 3,
-            numOfBoardRows: 3,
             winner: null
-
         }
     }
-
 
     handleClick(i) {
         if (this.isOverwiriting(i) || this.state.winner) return;
@@ -33,7 +27,7 @@ class Board extends React.Component {
         }
         this.setState({ squares: squaresCopy })
 
-        const WinnerCalculator = new winnerCalculator(squaresCopy, this.state.winCondition, this.state.numOfBoardRows);
+        const WinnerCalculator = new winnerCalculator(squaresCopy, this.props.winCondition, this.props.numOfBoardRows);
         const winner = WinnerCalculator.getWinner();
         this.setState({
             winner: winner
@@ -48,13 +42,14 @@ class Board extends React.Component {
         return this.state.squares[key] != null
     }
 
-    renderSquare(i) {
-        return <Square selectedByUser={this.state.squares[i]} onClick={() => this.handleClick(i)} />;
+    renderSquare(rowIndex, columnIndex) {
+        let id = this.calculateSqureId(rowIndex, columnIndex);
+        return <Square key={id} selectedByUser={this.state.squares[id]} onClick={() => this.handleClick(id)} />;
     }
 
-    calculateSqureId(rowIndex, columnIndex)  {
-        return rowIndex * this.state.numOfBoardRows + (columnIndex)
-      }
+    calculateSqureId(rowIndex, columnIndex) {
+        return rowIndex * this.props.numOfBoardRows + (columnIndex)
+    }
 
     render() {
         const winner = this.state.winner;
@@ -66,27 +61,25 @@ class Board extends React.Component {
         }
         //https://reactjs.org/docs/jsx-in-depth.html#jsx-children
         //jsx-children document
+
+        let rows = [];
+        let numOfBoardRows = this.props.numOfBoardRows;
+        for (let i = 0; i < numOfBoardRows; i++) {
+            rows.push(
+                <div className="board-row" key={i}>
+                    {[...Array(parseInt(this.props.numOfBoardRows))].map((x, j) =>
+                        this.renderSquare(i, j)
+                    )}
+                </div>
+            );
+        }
+
+
+
         return (
             <div>
                 <div className="status">{status}</div>
-                {() => {
-                    let rows = [];
-                    for (let i = 0; i < 4; i++) {
-                        rows.push(
-                            <div className="board-row">
-                                {() => {
-                                    for (let i = 0; i < 4; i++) {
-                                        { this.renderSquare(0) }
-                                    }
-                                }}
-
-                            </div>
-                        );
-                    }
-                    return rows;
-                }
-                }
-
+                {rows}
             </div>
         );
 

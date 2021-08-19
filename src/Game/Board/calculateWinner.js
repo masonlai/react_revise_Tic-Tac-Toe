@@ -9,7 +9,7 @@ export default class winnerCalculator {
 
   getWinner() {
     for (let i = 0; i < this.squares.length; i++) {
-      if (this.squares[i] == null) break;
+      if (this.squares[i] == null) continue;
 
       const winByRow = this.winByRow(i)
       if (winByRow){
