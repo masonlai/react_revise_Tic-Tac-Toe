@@ -8,9 +8,10 @@ export default class winnerCalculator {
 
 
   getWinner() {
+    console.log("winConditon".concat(this.winCondition))
     for (let i = 0; i < this.squares.length; i++) {
       if (this.squares[i] == null) continue;
-
+      
       const winByRow = this.winByRow(i)
       if (winByRow){
         console.log("winByRow")
@@ -94,8 +95,9 @@ export default class winnerCalculator {
   }
 
   whoWon(countWin) {
-    if (countWin.length !== this.winCondition) return null
+    console.log("countWinLength".concat(countWin.length))
     let uniq = [...new Set(countWin)];
+    console.log("youknow".concat(uniq.length === 1 && uniq[0] !== null))
     if (uniq.length === 1 && uniq[0] !== null) { return uniq[0] };
     return null
   }

@@ -10,9 +10,14 @@ class Game extends React.Component {
         this.state = {
             winCondition: 3,
             numOfBoardRows: 3,
+            squares: Array(9).fill(null),
         }
         this.updateNumerOfRows = this.updateNumerOfRows.bind(this);
-        this.updateWinCondition = this.updateNumerOfRows.bind(this);
+        this.updateWinCondition = this.updateWinCondition.bind(this);
+    }
+
+    updateSquares(squares){
+        this.setState({squares:squares})
     }
 
     updateNumerOfRows(e) {
@@ -48,7 +53,7 @@ class Game extends React.Component {
                         <Col xs={{ offset: 1, span: 3 }}>
                             <InputGroup size="sm" className="mb-3">
                                 <InputGroup.Text id="inputGroup-sizing-sm">Number of rows</InputGroup.Text>
-                                <FormControl aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                                <FormControl id="NumberOfRows" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
                                     onChange={this.updateNumerOfRows} />
                             </InputGroup>
                         </Col>
@@ -57,7 +62,7 @@ class Game extends React.Component {
                         <Col xs={{ offset: 1, span: 3 }}>
                             <InputGroup size="sm" className="mb-3">
                                 <InputGroup.Text id="inputGroup-sizing-sm">Win condition</InputGroup.Text>
-                                <FormControl aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                                <FormControl id="winCondition" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
                                     onChange={this.updateWinCondition} />
                             </InputGroup>
                         </Col>
@@ -75,7 +80,8 @@ class Game extends React.Component {
                     <div className="game mt-4">
                         <div className="game-board">
                             <Board key={'board'} winCondition={this.state.winCondition}
-                            numOfBoardRows={this.state.numOfBoardRows}/>
+                            numOfBoardRows={this.state.numOfBoardRows}
+                            updateSquares={this.updateSquares}/>
                         </div>
                     </div>
                 </Row>

@@ -6,7 +6,6 @@ class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            squares: Array(9).fill(null),
             Xturn: true,
             turnPlayer: 'X',
             winner: null
@@ -14,24 +13,7 @@ class Board extends React.Component {
     }
 
     handleClick(i) {
-        if (this.isOverwiriting(i) || this.state.winner) return;
 
-
-        let squaresCopy = this.state.squares.slice();
-        if (this.state.Xturn) {
-            squaresCopy[i] = 'X';
-            this.setState({ Xturn: false, turnPlayer: 'O' })
-        } else {
-            squaresCopy[i] = 'O';
-            this.setState({ Xturn: true, turnPlayer: 'X' })
-        }
-        this.setState({ squares: squaresCopy })
-
-        const WinnerCalculator = new winnerCalculator(squaresCopy, this.props.winCondition, this.props.numOfBoardRows);
-        const winner = WinnerCalculator.getWinner();
-        this.setState({
-            winner: winner
-        })
     }
 
     returnCurrPlayer() {
