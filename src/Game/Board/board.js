@@ -7,13 +7,26 @@ class Board extends React.Component {
         super(props);
         this.state = {
             Xturn: true,
-            turnPlayer: 'X',
-            winner: null
+            turnPlayer: 'X'
         }
     }
 
     handleClick(i) {
+        if (this.isOverwiriting(i) || this.props.winner) return;
+        
+        let squaresCopy = Array.from(this.props.squares);
+        if (this.state.Xturn) {
+            squaresCopy[i] = 'X';
+            this.setState({ Xturn: false, turnPlayer: 'O' })
+        } else {
+            squaresCopy[i] = 'O';
+            this.setState({ Xturn: true, turnPlayer: 'X' })
+        }
+        this.props.updateSquares(squaresCopy)
 
+        const WinnerCalculator = new winnerCalculator(squaresCopy, this.props.winCondition, this.props.numOfBoardRows);
+        const winner = WinnerCalculator.getWinner();
+        this.props.updateWinner(winner)
     }
 
     returnCurrPlayer() {
@@ -21,12 +34,13 @@ class Board extends React.Component {
     }
 
     isOverwiriting(key) {
-        return this.state.squares[key] != null
+        return this.props.squares[key] != null
     }
 
     renderSquare(rowIndex, columnIndex) {
         let id = this.calculateSqureId(rowIndex, columnIndex);
-        return <Square key={id} selectedByUser={this.state.squares[id]} onClick={() => this.handleClick(id)} />;
+        let squaresCopy = Array.from(this.props.squares);
+        return <Square key={id} selectedByUser={squaresCopy[id]} onClick={() => this.handleClick(id)} />;
     }
 
     calculateSqureId(rowIndex, columnIndex) {
@@ -34,7 +48,7 @@ class Board extends React.Component {
     }
 
     render() {
-        const winner = this.state.winner;
+        const winner = this.props.winner;
         let status;
         if (winner) {
             status = 'Winner: ' + winner;
@@ -55,8 +69,6 @@ class Board extends React.Component {
                 </div>
             );
         }
-
-
 
         return (
             <div>

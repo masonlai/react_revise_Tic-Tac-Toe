@@ -50,7 +50,10 @@ export default class winnerCalculator {
     const countWin = []
     for (let j = 0; j < this.winCondition; j++) {
       const x = this.getX(i + j);
-      if (x >= (this.numOfBoardRows)) break;
+      if (x >= (this.numOfBoardRows)){
+        countWin.push(null);
+        continue;
+      };
       countWin.push(this.squares[i + j])
     }
 
@@ -64,7 +67,10 @@ export default class winnerCalculator {
       const y = this.getY(i + j, x)
       console.log("y".concat(y));
       console.log("x".concat(x));
-      if (y >= (this.numOfBoardRows)) break;
+      if (y >= (this.numOfBoardRows)){
+        countWin.push(null);
+        continue;
+      };
       countWin.push(this.squares[i + (j * this.numOfBoardRows)])
     }
 
@@ -77,7 +83,10 @@ export default class winnerCalculator {
     for (let j = 0; j < this.winCondition; j++) {
       const x = this.getX(i + j);
       const y = this.getY(i + j, x);
-      if (x >= this.numOfBoardRows || y >= this.numOfBoardRows) break;
+      if (x >= this.numOfBoardRows || y >= this.numOfBoardRows){
+        countWin.push(null);
+        continue;
+      };
       countWin.push(this.squares[i + (j * this.numOfBoardRows) - j])
     }
     return this.whoWon(countWin)
@@ -88,7 +97,10 @@ export default class winnerCalculator {
     for (let j = 0; j < this.winCondition; j++) {
       const x = this.getX(i + j);
       const y = this.getY(i, x);
-      if (x >= this.numOfBoardRows || y >= this.numOfBoardRows) break;
+      if (x >= this.numOfBoardRows || y >= this.numOfBoardRows){
+        countWin.push(null);
+        continue;
+      };
       countWin.push(this.squares[i + (j * this.numOfBoardRows) + j])
     }
     return this.whoWon(countWin)
